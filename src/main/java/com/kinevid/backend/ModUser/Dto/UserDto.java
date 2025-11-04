@@ -1,16 +1,16 @@
 package com.kinevid.backend.ModUser.Dto;
 
 import com.kinevid.backend.ModUser.Entity.User;
-import com.kinevid.backend.ModUser.Enums.UserStatus;
 import lombok.*;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
 @ToString
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class UserDto implements Serializable {
 
     private Long id;
     private String username;
@@ -18,6 +18,7 @@ public class UserDto {
     private String lastname;
     private String email;
     private String phone;
+    private String password;
     private String status;
     private String fullname;
 
@@ -28,6 +29,7 @@ public class UserDto {
         this.lastname = user.getLastname();
         this.email = user.getEmail();
         this.phone = user.getPhone();
+        this.password = user.getPassword();
         this.status = user.getStatus().getValue();
         this.fullname = user.getName() + " " + user.getLastname();
     }
