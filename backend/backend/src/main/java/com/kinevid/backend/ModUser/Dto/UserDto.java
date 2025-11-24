@@ -3,14 +3,13 @@ package com.kinevid.backend.ModUser.Dto;
 import com.kinevid.backend.ModUser.Entity.User;
 import lombok.*;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
+@Builder
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto implements Serializable {
+public class UserDto {
 
     private Long id;
     private String username;

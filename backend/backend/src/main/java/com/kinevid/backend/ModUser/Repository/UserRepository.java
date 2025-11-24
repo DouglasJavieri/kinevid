@@ -5,6 +5,7 @@ import com.kinevid.backend.ModUser.Dto.UsernameOrEmailDto;
 import com.kinevid.backend.ModUser.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,4 +33,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<UsernameOrEmailDto> findByUsername(String username);
 
     Optional<UsernameOrEmailDto> findByEmail(String email);
+
+    @Query("SELECT u " +
+            "FROM User u " +
+            "WHERE u.deleted = false " +
+            "AND u.status <> com.kinevid.backend.ModUser.Enums.UserStatus.ELIMINADO " +
+            "AND u.id = :userId ")
+    Optional<User> findById(@Param("userId") Long userId);
 }
