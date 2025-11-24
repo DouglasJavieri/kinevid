@@ -12,4 +12,7 @@ public interface UserService {
     UserDto createUser(UserDto userDto);
 
     User updateUser(UserDto userDto, Long userId);
+
+    User deleteUser(Long userId);
+
 }

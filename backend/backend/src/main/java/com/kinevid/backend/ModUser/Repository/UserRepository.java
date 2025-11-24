@@ -39,5 +39,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE u.deleted = false " +
             "AND u.status <> com.kinevid.backend.ModUser.Enums.UserStatus.ELIMINADO " +
             "AND u.id = :userId ")
-    Optional<User> findById(@Param("userId")  Long userId);
+    Optional<User> findById(@Param("userId") Long userId);
 }

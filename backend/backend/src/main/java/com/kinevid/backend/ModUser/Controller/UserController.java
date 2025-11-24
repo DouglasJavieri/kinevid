@@ -69,7 +69,7 @@ public class UserController {
             })
     public ResponseEntity<ResponseBody<UserDto>> createUser(@RequestBody UserDto userDto) {
         try {
-            log.info("**************** {}", userDto);
+            log.info("Solicitud recibida para crear usaurio: {}", userDto);
             UserDto createdUser = this.userService.createUser(userDto);
             return ok(ApiUtil.buildResponseWithDefaults(createdUser));
         } catch (OperationException e) {
@@ -105,5 +105,35 @@ public class UserController {
             throw ApiResponseException.serverError(ApiConstants.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @DeleteMapping("/delete-user/{id}")
+    @Operation(
+            summary = "Eliminar usuario (soft delete)",
+            description = "Marca un usuario como eliminado sin borrarlo físicamente",
+            tags = {"users"},
+            responses = {
+                    @ApiResponse(description = "Operación satisfactorio", responseCode = "200", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(description = "Registro eliminado", responseCode = "201", content = @Content(mediaType = "application/json")),
+                    @ApiResponse(responseCode = "401", description = "Fallo de autentificación", content = @Content(schema = @Schema(hidden = true))),
+                    @ApiResponse(responseCode = "403", description = "Acceso Denegado", content = @Content(schema = @Schema(hidden = true))),
+            }
+    )
+    public ResponseEntity<ResponseBody<User>> deleteUser(@PathVariable("userId") Long userId) {
+        try {
+            log.info("Solicitud recibida para eliminar usuario ID: {}", userId);
+
+            User deletedUser = this.userService.deleteUser(userId);
+            return ok(ApiUtil.buildResponseWithDefaults(deletedUser));
+
+        } catch (OperationException e) {
+            log.error("Error controlado en deleteUser: {}", e.getMessage());
+            throw ApiResponseException.badRequest(e.getMessage());
+
+        } catch (Exception e) {
+            log.error("Error inesperado en deleteUser: ", e);
+            throw ApiResponseException.serverError(ApiConstants.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }

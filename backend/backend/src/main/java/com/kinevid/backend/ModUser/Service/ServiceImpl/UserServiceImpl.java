@@ -87,6 +87,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User updateUser(UserDto userDto, Long userId) {
         log.info("Actualizando usuario Id: {} con datos: {}", userId, userDto.toString());
         ValidationUtil.throwExceptionIfInvalidText("Nombre", userDto.getName(), true, 60);
@@ -136,5 +137,28 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    @Transactional
+    public User deleteUser(Long userId) {
+        try {
+            User user = this.userRepository.findById(userId)
+                    .orElseThrow(() -> new OperationException(FormatUtil.noRegistrado("Usuario", userId)));
+            log.info("Usuario encontrado: {}", user.getUsername());
+            if (user.isDeleted()) {
+                throw new OperationException("El usuario ya fue eliminado anteriormente.");
+            }
+            user.setDeleted(true);
+            user.setStatus(UserStatus.ELIMINADO);
+            log.info("Usuario ID {} eliminado lógicamente. Con username {}: ", userId, user.getUsername());
 
+            return this.userRepository.save(user);
+
+        }catch (OperationException e) {
+            log.error("Error controlado eliminando usuario {}: {}", userId, e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("Error inesperado al eliminar usuario {}: {}", userId, e.getMessage(), e);
+            throw new RuntimeException("Error interno al eliminar usuario.");
+        }
+    }
 }
